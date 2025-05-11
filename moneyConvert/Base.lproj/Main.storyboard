@@ -248,6 +248,60 @@
             </objects>
             <point key="canvasLocation" x="129.00763358778624" y="-2.1126760563380285"/>
         </scene>
+        <!--CountrySelectionVC-->
+        <scene sceneID="wz2-Zs-fj9">
+            <objects>
+                <viewController restorationIdentifier="CountrySelectionVC" storyboardIdentifier="CountrySelectionVC" title="CountrySelectionVC" id="SnH-MM-F68" customClass="CountrySelectionVC" customModule="moneyConvert" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Pqq-Gt-NuH">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bfK-gf-ACs">
+                                <rect key="frame" x="0.0" y="118" width="393" height="60"/>
+                                <subviews>
+                                    <searchBar contentMode="redraw" searchBarStyle="minimal" placeholder="Search for Country's Name" translatesAutoresizingMaskIntoConstraints="NO" id="FKU-IN-W73">
+                                        <rect key="frame" x="0.0" y="0.0" width="393" height="60"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="SnH-MM-F68" id="VaN-fT-DPl"/>
+                                        </connections>
+                                    </searchBar>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstItem="FKU-IN-W73" firstAttribute="leading" secondItem="bfK-gf-ACs" secondAttribute="leading" id="9n4-wb-YJb"/>
+                                    <constraint firstAttribute="trailing" secondItem="FKU-IN-W73" secondAttribute="trailing" id="W72-N6-FJo"/>
+                                    <constraint firstAttribute="bottom" secondItem="FKU-IN-W73" secondAttribute="bottom" id="XTI-Db-fBu"/>
+                                    <constraint firstAttribute="height" constant="60" id="bSo-o4-5r8"/>
+                                    <constraint firstItem="FKU-IN-W73" firstAttribute="top" secondItem="bfK-gf-ACs" secondAttribute="top" id="zfT-0F-914"/>
+                                </constraints>
+                            </view>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="rS8-ez-Fj8">
+                                <rect key="frame" x="0.0" y="178" width="393" height="674"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <inset key="separatorInset" minX="15" minY="0.0" maxX="15" maxY="0.0"/>
+                            </tableView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="WoN-6n-ebP"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="rS8-ez-Fj8" secondAttribute="bottom" id="5s5-em-A4e"/>
+                            <constraint firstItem="rS8-ez-Fj8" firstAttribute="leading" secondItem="WoN-6n-ebP" secondAttribute="leading" id="MKP-RS-xtD"/>
+                            <constraint firstItem="bfK-gf-ACs" firstAttribute="leading" secondItem="WoN-6n-ebP" secondAttribute="leading" id="TJj-yG-igj"/>
+                            <constraint firstItem="WoN-6n-ebP" firstAttribute="trailing" secondItem="rS8-ez-Fj8" secondAttribute="trailing" id="bbz-5N-rTp"/>
+                            <constraint firstItem="bfK-gf-ACs" firstAttribute="top" secondItem="WoN-6n-ebP" secondAttribute="top" id="fhb-nE-WdF"/>
+                            <constraint firstItem="rS8-ez-Fj8" firstAttribute="top" secondItem="bfK-gf-ACs" secondAttribute="bottom" id="lTm-Zz-hVC"/>
+                            <constraint firstItem="WoN-6n-ebP" firstAttribute="trailing" secondItem="bfK-gf-ACs" secondAttribute="trailing" id="yLR-0q-Hiy"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="countryNameTV" destination="rS8-ez-Fj8" id="Sh4-8A-guK"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="bfg-0K-S7F" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="959.5419847328244" y="-2.1126760563380285"/>
+        </scene>
     </scenes>
     <resources>
         <image name="BackgroundGradient" width="360" height="703"/>
@@ -259,7 +313,7 @@
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="tableCellBlueTextColor">
-            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

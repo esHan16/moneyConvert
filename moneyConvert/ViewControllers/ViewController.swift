@@ -33,10 +33,15 @@ class ViewController: UIViewController {
     @IBOutlet weak var interchangeButton: UIButton!
     @IBOutlet weak var lineView: UIView!
     @IBOutlet weak var bottomTextField: UITextField!
-    
     @IBOutlet weak var exchangeRateTitleLabel: UILabel!
-    
     @IBOutlet weak var exchangeRateLabel: UILabel!
+    
+    lazy var countrySelectionVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CountrySelectionVC")
+    
+    /*
+     Storyboard (<UIStoryboard: 0x6000026140c0>) doesn't contain a view controller with identifier 'CountrySelectionVC
+     */
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -101,11 +106,11 @@ class ViewController: UIViewController {
     }
     
     @IBAction func topButtonTapped(_ sender: Any) {
-        
+        openCountrySelectionVC()
     }
     
     @IBAction func bottomButtonTapped(_ sender: Any) {
-        
+        openCountrySelectionVC()
     }
     
     func fetchCurrencyData(from url: String, completion: @escaping (CurrencyResponse?, Error?) -> Void) {
@@ -114,34 +119,49 @@ class ViewController: UIViewController {
             return
         }
         
-        let task = URLSession.shared.dataTask(with: url) { data, response, error in
+        let config = URLSessionConfiguration.default
+        config.timeoutIntervalForRequest = 30
+        config.timeoutIntervalForResource = 60
+        let session = URLSession(configuration: config)
+
+        let task = session.dataTask(with: url) { data, response, error in
             if let error = error {
+                print("Network error: \(error.localizedDescription)")
                 completion(nil, error)
                 return
             }
             
+            if let httpResponse = response as? HTTPURLResponse {
+                print("HTTP Status Code: \(httpResponse.statusCode)")
+                guard (200...299).contains(httpResponse.statusCode) else {
+                    let statusError = NSError(domain: "HTTPError", code: httpResponse.statusCode, userInfo: nil)
+                    completion(nil, statusError)
+                    return
+                }
+            }
+
             guard let data = data else {
-                completion(nil, NSError(domain: "No data", code: 404, userInfo: nil))
+                completion(nil, NSError(domain: "No data received", code: 404, userInfo: nil))
                 return
             }
             
             do {
-                // Decode the JSON data into the model
                 let decoder = JSONDecoder()
                 let currencyData = try decoder.decode(CurrencyResponse.self, from: data)
                 completion(currencyData, nil)
             } catch {
+                print("Decoding error: \(error)")
                 completion(nil, error)
             }
         }
         
         task.resume()
     }
-    
-    func fetchData(countryCode : String) {
+
+    func fetchData(countryCode: String) {
         let apiUrl = "https://v6.exchangerate-api.com/v6/93253e429045dd59c39e056d/latest/\(countryCode)"
         
-        fetchCurrencyData(from: apiUrl) { (currencyResponse, error) in
+        fetchCurrencyData(from: apiUrl) { currencyResponse, error in
             if let error = error {
                 print("Error fetching data: \(error.localizedDescription)")
                 return
@@ -152,18 +172,29 @@ class ViewController: UIViewController {
                 return
             }
             
-            // Access the parsed data
             print("Base Code: \(currencyResponse.base_code)")
             print("Last Update: \(currencyResponse.time_last_update_utc)")
-            
-            // Example: Convert 100 INR to USD
-            let inrToUsd = currencyResponse.conversion_rates
-            print(inrToUsd)
-            
-            
+            print("Conversion Rates: \(currencyResponse.conversion_rates)")
         }
-        
     }
+    
+    func openCountrySelectionVC(){
+        if let sheet = countrySelectionVC.sheetPresentationController {
+            sheet.detents = [.medium()]
+            sheet.preferredCornerRadius = 20
+        }
+        self.present(countrySelectionVC, animated: true, completion: nil)
+    }
+    
+    /*
+     
+     if let sheet = countrySelectionVC.sheetPresentationController {
+        sheet.animateChanges {
+            sheet.selectedDetentIdentifier = .large
+        }
+     }
+     
+     */
     
 }
 
