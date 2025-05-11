@@ -17,8 +17,7 @@ var secondaryLabelTitleColor : UIColor = UIColor(red: 0.63, green: 0.63, blue: 0
 
 class ViewController: UIViewController {
     
-    // https://v6.exchangerate-api.com/v6/93253e429045dd59c39e056d/latest/INR
-    
+    var allCurrencies : [Currency] = []
     @IBOutlet weak var titleLable: UILabel!
     @IBOutlet weak var backgroundGradientImage: UIImageView!
     @IBOutlet weak var backView: UIView!
@@ -89,6 +88,11 @@ class ViewController: UIViewController {
         self.exchangeRateLabel.font = UIFont.robotoMedium(ofSize: 18)
         self.exchangeRateLabel.textColor = UIColor.black
         
+        allCurrencies = CurrencyManager.shared.allCurrencies()
+        
+        debugPrint(allCurrencies)
+        
+        fetchData(countryCode: "INR")
         
     }
     
@@ -101,6 +105,63 @@ class ViewController: UIViewController {
     }
     
     @IBAction func bottomButtonTapped(_ sender: Any) {
+        
+    }
+    
+    func fetchCurrencyData(from url: String, completion: @escaping (CurrencyResponse?, Error?) -> Void) {
+        guard let url = URL(string: url) else {
+            completion(nil, NSError(domain: "Invalid URL", code: 400, userInfo: nil))
+            return
+        }
+        
+        let task = URLSession.shared.dataTask(with: url) { data, response, error in
+            if let error = error {
+                completion(nil, error)
+                return
+            }
+            
+            guard let data = data else {
+                completion(nil, NSError(domain: "No data", code: 404, userInfo: nil))
+                return
+            }
+            
+            do {
+                // Decode the JSON data into the model
+                let decoder = JSONDecoder()
+                let currencyData = try decoder.decode(CurrencyResponse.self, from: data)
+                completion(currencyData, nil)
+            } catch {
+                completion(nil, error)
+            }
+        }
+        
+        task.resume()
+    }
+    
+    func fetchData(countryCode : String) {
+        let apiUrl = "https://v6.exchangerate-api.com/v6/93253e429045dd59c39e056d/latest/\(countryCode)"
+        
+        fetchCurrencyData(from: apiUrl) { (currencyResponse, error) in
+            if let error = error {
+                print("Error fetching data: \(error.localizedDescription)")
+                return
+            }
+            
+            guard let currencyResponse = currencyResponse else {
+                print("No currency data available")
+                return
+            }
+            
+            // Access the parsed data
+            print("Base Code: \(currencyResponse.base_code)")
+            print("Last Update: \(currencyResponse.time_last_update_utc)")
+            
+            // Example: Convert 100 INR to USD
+            let inrToUsd = currencyResponse.conversion_rates
+            print(inrToUsd)
+            
+            
+        }
         
     }
     
